@@ -7,6 +7,6 @@ export default class ImageService{
     }
 
     postImage(imageType,userId,image,token){
-        return axios.post('http://localhost:8080/api/images/upload?imageType='+imageType+'&user.id='+userId,image, {headers: {'Authorization' : `Bearer ${token}`}});
+        return axios.post(`http://localhost:8080/api/images/upload?imageType=${imageType}&jobseekerId=${userId}`,image, {headers: {'Authorization' : `Bearer ${token}`}});
     }
 }

@@ -17,4 +17,14 @@ export default class AboutService {
     return axios.post("http://localhost:8080/api/employerAbouts/add", about, {headers: {'Authorization' : `Bearer ${token}`}});
   }
 
+  deleteAbout(aboutId,token){
+    return axios.post("http://localhost:8080/api/abouts/delete",aboutId, {headers: {'Authorization' : `Bearer ${token}`}});
+  }
+
+  deleteEmployerAbout(aboutId,token){
+    return axios.post("http://localhost:8080/api/employerAbouts/delete",aboutId, {headers: {'Authorization' : `Bearer ${token}`}});
+  }
+
+
+
 }

@@ -4,10 +4,7 @@ export default class ApplicationService {
   
   apply(advertisementId, jobseekerId, token) {
     return axios.post(
-      "http://localhost:8080/api/advertisements/apply?advertisementId=" +
-        advertisementId +
-        "&jobseekerId=" +
-        jobseekerId,
+      "http://localhost:8080/api/advertisements/apply",{"advertisementId":advertisementId,"jobseekerId":jobseekerId},
       { headers: { Authorization: `Bearer ${token}` } }
     );
   }

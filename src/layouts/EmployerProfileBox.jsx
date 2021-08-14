@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaCog } from "react-icons/fa";
+import {Button,Icon} from 'semantic-ui-react'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import EmployerService from "../services/employerService";
+import { useHistory } from "react-router-dom";
+
 
 export default function EmployerProfileBox(props) {
   const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const [employer, setEmployer] = useState({
     id: 0,
@@ -17,6 +20,12 @@ export default function EmployerProfileBox(props) {
   });
 
   let employerService = new EmployerService();
+  const history = useHistory();
+
+  const location = {
+    pathname: "/upload",
+    state: { userId: authItem[0].user.id, token: token },
+  };
 
   async function getEmployerInfo() {
     try {
@@ -81,18 +90,23 @@ export default function EmployerProfileBox(props) {
                 alignItems: "center",
               }}
             >
-              <button
-                style={{
-                  border: "0.5px solid #EFEFEF",
-                  borderRadius: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  height: "30px",
-                }}
-              >
-                <FaCog />
-                <span>&nbsp;</span>Settings
-              </button>
+              <Button.Group vertical>
+                <Button
+                  size="mini"
+                  icon
+                  labelPosition="left"
+                  onClick={() => {
+                    history.push(location);
+                  }}
+                >
+                  <Icon name="photo" />
+                  Upload
+                </Button>
+                <Button size="mini" icon labelPosition="left">
+                  Setting
+                  <Icon name="setting" />
+                </Button>
+              </Button.Group>
             </div>
           </div>
         </div>

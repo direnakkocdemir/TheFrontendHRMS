@@ -1,16 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, List } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import LanguageService from "../../services/languageService";
+import { toast } from "react-toastify";
 
 export default function JobseekerLanguageBox(props) {
   const resume = props.resume;
+
+  const { token } = useSelector(state => state.auth)
 
   let [language, setLanguage] = useState([]);
 
   const history = useHistory();
 
-  async function getLanguages(){
+  async function getLanguages() {
     setLanguage(resume.languages);
+  }
+
+  const languageService = new LanguageService();
+  async function deleteLanguage(languageId) {
+    try {
+      const response = await languageService.deleteLanguage({ id: languageId }, token);
+      toast.success(response.data.message);
+      history.push("/");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
   }
 
   useEffect(() => {
@@ -20,7 +36,7 @@ export default function JobseekerLanguageBox(props) {
   function goSettings() {
     history.push("/jslanguage");
   }
-  
+
   return (
     <div>
       <div
@@ -39,17 +55,25 @@ export default function JobseekerLanguageBox(props) {
             width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent:'space-between',
+            justifyContent: 'space-between',
             padding: "20px",
             borderBottom: "1px solid #CCD5AE",
           }}
         >
           <h5 style={{ margin: "0" }}>Language</h5>
-          
-          <Button icon="pencil" onClick={goSettings}/>
+
+          <Button icon="add" onClick={goSettings} />
         </div>
-        <div style={{ padding: "20px" }}>
-          <ul>
+        <div style={{ padding: "20px 0 20px 40px" }}>
+          <List>
+            {language
+              ? language.map((lang) => (
+                <List.Item key={lang.id}>
+                  <Button floated="right" size="mini" icon="x" onClick={()=>deleteLanguage(lang.id)}/>
+                  <List.Header>{lang.language}</List.Header>Level: {lang.level}
+                </List.Item>)) : null}
+          </List>
+          {/* <ul>
             {language
               ? language.map((lang) => (
                   <li key={lang.id}>
@@ -57,7 +81,7 @@ export default function JobseekerLanguageBox(props) {
                   </li>
                 ))
               : null}
-          </ul>
+          </ul> */}
         </div>
       </div>
     </div>

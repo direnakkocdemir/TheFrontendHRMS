@@ -9,4 +9,8 @@ export default class EducationService{
     postEducation(education,token){
         return axios.post('http://localhost:8080/api/educations/add',education, {headers: {'Authorization' : `Bearer ${token}`}});
     }
+
+    deleteEducation(educationId,token){
+        return axios.post('http://localhost:8080/api/educations/delete',educationId, {headers: {'Authorization' : `Bearer ${token}`}});
+    }
 }

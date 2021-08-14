@@ -9,6 +9,7 @@ export default function EmployerAboutBox(props) {
   const id = props.id;
 
   const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const [about, setAbout] = useState([]);
 
@@ -18,8 +19,8 @@ export default function EmployerAboutBox(props) {
   async function getEmployerAbout() {
     try {
       const result = await aboutService.getEmployerAboutByEmployerId(
-        id,
-        authItem[0].user.token
+        authItem[0].user.id,
+        token
       );
       setAbout(result.data.data);
     } catch (err) {
@@ -27,9 +28,19 @@ export default function EmployerAboutBox(props) {
     }
   }
 
+  async function deleteAbout() {
+    try {
+      const response = await aboutService.deleteEmployerAbout({ id: about[0].id }, token);
+      toast.success(response.data.message);
+      history.push("/");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  }
+
   useEffect(async () => {
     getEmployerAbout();
-  }, [props]);
+  }, [props,authItem]);
 
   function goSettings() {
     history.push("/emabout");
@@ -67,7 +78,10 @@ export default function EmployerAboutBox(props) {
           }}
         >
           <h5 style={{ margin: "0" }}>About</h5>
-          <Button icon="setting" onClick={goSettings}></Button>
+          <Button.Group>
+            <Button icon="add" onClick={goSettings} />
+            <Button icon="x" onClick={() => deleteAbout()} />
+          </Button.Group>
         </div>
         <div style={{ padding: "20px" }}>
           {about ? (

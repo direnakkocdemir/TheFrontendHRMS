@@ -9,4 +9,8 @@ export default class ExperienceService{
     postExperience(experience,token){
         return axios.post('http://localhost:8080/api/experiences/add',experience, {headers: {'Authorization' : `Bearer ${token}`}});
     }
+
+    deleteExperience(experienceId,token){
+        return axios.post('http://localhost:8080/api/experiences/delete',experienceId, {headers: {'Authorization' : `Bearer ${token}`}});
+    }
 }

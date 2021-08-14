@@ -14,6 +14,12 @@ import { toast } from "react-toastify";
 
 export default function JobseekerProfile() {
   const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
+
+  const location = {
+    pathname: "/upload",
+    state: { userId: authItem[0].user.id, token: token },
+  };
   const [resume, setResume] = useState({
     id: 0,
     abouts: [],
@@ -21,7 +27,7 @@ export default function JobseekerProfile() {
     experiences: [],
     skills: [],
     languages: [],
-    images: [],
+    images: [{imageUrl:"",imageType:0}],
   });
   console.log(resume);
   let [jobseeker, setJobseeker] = useState({
@@ -36,17 +42,17 @@ export default function JobseekerProfile() {
   const history = useHistory();
 
   async function getJobseekerInfo() {
-    try{
+    try {
       const response = await jobseekerService.getJobseekerInfoById(
-      authItem[0].user.id,
-      authItem[0].user.token
-    );
-    console.log(response.data.data)
-    setJobseeker(response.data.data);
-    }catch(err){
+        authItem[0].user.id,
+        authItem[0].user.token
+      );
+      console.log(response.data.data)
+      setJobseeker(response.data.data);
+    } catch (err) {
       toast.error(err.response.data.message);
     }
-    
+
   }
   async function getResume() {
     try {
@@ -80,17 +86,20 @@ export default function JobseekerProfile() {
           marginBottom: "5vh",
         }}
       >
-        {resume.id !== 0 ? (
+        {resume.id !== 0 && resume.images[1].imageType===2? (
           <img
             style={{ width: "100%", height: "200px" }}
             src={`${resume.images[1].imageUrl}`}
           />
-        ) : (
+        ) : resume.id !== 0 && resume.images[0].imageType===2? (
           <img
             style={{ width: "100%", height: "200px" }}
-            src="https://i.pinimg.com/originals/a3/af/35/a3af356c5d57a46a1abdf37421ce3ac3.jpg"
+            src={`${resume.images[0].imageUrl}`}
           />
-        )}
+        ):<img
+        style={{ width: "100%", height: "200px" }}
+        src='https://images.ctfassets.net/7thvzrs93dvf/wpImage18643/2f45c72db7876d2f40623a8b09a88b17/linkedin-default-background-cover-photo-1.png?w=790&h=196&q=90&fm=png'
+      />}
 
         <div
           style={{
@@ -108,17 +117,20 @@ export default function JobseekerProfile() {
               flexDirection: "column",
             }}
           >
-            {resume.id !== 0 ? (
+            {resume.id!==0 && resume.images[0].imageType===1 ? (
               <img
                 style={{ marginTop: "-75px", width: "150px", height: "150px" }}
                 src={`${resume.images[0].imageUrl}`}
               />
-            ) : (
+            ) : resume.id!==0 && resume.images[1].imageType===1 ?(
               <img
                 style={{ marginTop: "-75px", width: "150px", height: "150px" }}
-                src={`https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg`}
+                src={`${resume.images[1].imageUrl}`}
               />
-            )}
+            ):<img
+            style={{ marginTop: "-75px", width: "150px", height: "150px" }}
+            src={`https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg`}
+          />}
 
             <h5>
               {jobseeker ? jobseeker.firstName + " " + jobseeker.lastName : ""}
@@ -137,23 +149,23 @@ export default function JobseekerProfile() {
             }}
           >
             {authItem[0].user.userType === 1 && (
-              <div>
+              <Button.Group vertical>
                 <Button
                   size="mini"
                   icon
                   labelPosition="left"
                   onClick={() => {
-                    history.push("/upload");
+                    history.push(location);
                   }}
                 >
                   <Icon name="photo" />
                   Upload
                 </Button>
-                <Button size="mini" icon labelPosition="right">
+                <Button size="mini" icon labelPosition="left">
                   Setting
                   <Icon name="setting" />
                 </Button>
-              </div>
+              </Button.Group>
             )}
           </div>
         </div>

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "semantic-ui-react";
+import { Button,List } from "semantic-ui-react";
 import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
+import SkillService from "../../services/skillService"
+import { toast } from "react-toastify";
 
 export default function JobseekerSkillBox(props) {
   const resume = props.resume;
+
+  const { token } = useSelector(state => state.auth)
 
   let [skill, setSkill] = useState([]);
 
@@ -12,6 +16,17 @@ export default function JobseekerSkillBox(props) {
 
   async function getSkills(){
     setSkill(resume.skills);
+  }
+
+  const skillService = new SkillService();
+  async function deleteSkill(skillId) {
+    try {
+      const response = await skillService.deleteSkill({ id: skillId }, token);
+      toast.success(response.data.message);
+      history.push("/");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
   }
 
   useEffect(() => {
@@ -46,14 +61,22 @@ export default function JobseekerSkillBox(props) {
           }}
         >
           <h5 style={{ margin: "0" }}>Skills</h5>
-          <Button icon="pencil" onClick={goSettings}/>
+          <Button icon="add" onClick={goSettings}/>
         </div>
         <div style={{ padding: "20px" }}>
-          <ul>
+        <List>
+            {skill
+              ? skill.map((skill) => (
+                <List.Item key={skill.id}>
+                  <Button floated="right" size="mini" icon="x" onClick={()=>deleteSkill(skill.id)}/>
+                  <List.Header>{skill.skillTitle}</List.Header>
+                </List.Item>)) : null}
+          </List>
+          {/* <ul>
             {skill
               ? skill.map((skill) => <li key={skill.id}>{skill.skillTitle}</li>)
               : null}
-          </ul>
+          </ul> */}
         </div>
       </div>
     </div>

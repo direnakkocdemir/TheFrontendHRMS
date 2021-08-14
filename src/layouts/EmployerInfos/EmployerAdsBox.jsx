@@ -16,11 +16,14 @@ import { toast } from "react-toastify";
 
 export default function EmployerAdsBox() {
   const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const [ads, setAds] = useState([]);
+  // const [closeId, setCloseId] = useState({id:0})
   let [activePage, setActivePage] = useState(1);
   let [pageSize, setPageSize] = useState(2);
   let [totalPageSize, setTotalPageSize] = useState(0);
+  
 
   let advertisementService = new AdvertisementService();
   const history = useHistory();
@@ -39,6 +42,16 @@ export default function EmployerAdsBox() {
     } catch (err) {
       toast.error(err.response)
     }
+  }
+
+  async function closeAdvertisement(closeId){
+    try{
+      const response = await advertisementService.closeAdvertisement({id:closeId},token);
+      toast.success(response.data.message);
+    }catch(err){
+      toast.error(err.response.data.message);
+    }
+    
 
   }
   useEffect(() => {
@@ -106,7 +119,7 @@ export default function EmployerAdsBox() {
           <Table>
             <Table.Body>
               {ads ? (
-                ads.map((ad) => (
+                ads.map((ad) => (ad.active &&
                   <Table.Row key={ad.id}>
                     <Card fluid>
                       <Card.Content>
@@ -129,7 +142,7 @@ export default function EmployerAdsBox() {
                           >
                             Check
                           </Button>
-                          <Button color="red">Close</Button>
+                          <Button color="red" onClick={()=>closeAdvertisement(ad.id)}>Close</Button>
                         </div>
                       </Card.Content>
                     </Card>

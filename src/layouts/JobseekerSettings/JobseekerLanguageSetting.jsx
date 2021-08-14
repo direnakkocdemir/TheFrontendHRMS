@@ -9,8 +9,6 @@ export default function JobseekerLanguageSetting() {
   const { authItem } = useSelector((state) => state.auth);
 
   const [language, setLanguage] = useState({
-    language: "",
-    level: 0,
     jobseekerId: authItem[0].user.id,
   });
 

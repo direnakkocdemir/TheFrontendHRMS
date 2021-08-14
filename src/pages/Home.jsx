@@ -22,57 +22,58 @@ import { ToastContainer } from "react-toastify";
 
 export default function Home() {
   return (
-    <div><ToastContainer
-    position="bottom-right"
-    autoClose={5000}
-    hideProgressBar={false}
-    newestOnTop={false}
-    closeOnClick
-    rtl={false}
-    pauseOnFocusLoss
-    draggable
-    pauseOnHover
+    <div>
+      <ToastContainer
+      position="bottom-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
     />
-    {/* Same as */}
-    <ToastContainer />
+      {/* Same as */}
+      <ToastContainer />
       <Container>
-            <Route exact path="/" component={SearchBox} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Signup} />
-            <Route exact path="/register/employer" component={SignupEmployer} />
-            <Route
-              exact
-              path="/register/jobseeker"
-              component={SignupJobseeker}
-            />
-            <Route exact path="/profile" component={JobseekerProfile} />
-            <Route exact path="/profileEmployer" component={EmployerProfile} />
-            <Route exact path="/ads" component={Advertisements} />
-            <Route
-              exact
-              path="/advertiseajob"
-              component={EmployerAdvertiseAJob}
-            />
-            <Route exact path="/jsabout" component={JobseekerAboutSetting} />
-            <Route
-              exact
-              path="/jseducation"
-              component={JobseekerEducationSetting}
-            />
-            <Route
-              exact
-              path="/jsexperience"
-              component={JobseekerExperienceSetting}
-            />
-            <Route
-              exact
-              path="/jslanguage"
-              component={JobseekerLanguageSetting}
-            />
-            <Route exact path="/jsskill" component={JobseekerSkillSetting} />
-            <Route exact path="/emabout" component={EmployerAboutSettings} />
-            <Route path="/employer/applications/:id" component={EmployerApplicationControl} />
-            <Route path="/upload" component={UploadImage} />
+        <Route exact path="/" component={SearchBox} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Signup} />
+        <Route exact path="/register/employer" component={SignupEmployer} />
+        <Route
+          exact
+          path="/register/jobseeker"
+          component={SignupJobseeker}
+        />
+        <Route exact path="/profile" component={JobseekerProfile} />
+        <Route exact path="/profileEmployer" component={EmployerProfile} />
+        <Route exact path="/ads" component={Advertisements} />
+        <Route
+          exact
+          path="/advertiseajob"
+          component={EmployerAdvertiseAJob}
+        />
+        <Route exact path="/jsabout" component={JobseekerAboutSetting} />
+        <Route
+          exact
+          path="/jseducation"
+          component={JobseekerEducationSetting}
+        />
+        <Route
+          exact
+          path="/jsexperience"
+          component={JobseekerExperienceSetting}
+        />
+        <Route
+          exact
+          path="/jslanguage"
+          component={JobseekerLanguageSetting}
+        />
+        <Route exact path="/jsskill" component={JobseekerSkillSetting} />
+        <Route exact path="/emabout" component={EmployerAboutSettings} />
+        <Route path="/employer/applications/:id" component={EmployerApplicationControl} />
+        <Route path="/upload" component={UploadImage} />
       </Container>
     </div>
   );

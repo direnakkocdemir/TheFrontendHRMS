@@ -15,7 +15,7 @@ export default function Navi() {
   };
 
   return (
-    <Menu size="large"  stackable color="white">
+    <Menu size="large"  stackable color="teal">
       <Menu.Item active style={{fontSize:'25px'}} name="JOBBY" as={Link} to={"/"} color={"purple"} />
       {authItem[0].loggedIn && authItem[0].user.userType === 1 ? (
         <Menu.Item>

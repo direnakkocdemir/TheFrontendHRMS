@@ -9,10 +9,6 @@ export default function JobseekerEducationSetting() {
   const { authItem } = useSelector((state) => state.auth);
 
   const [education, setEducation] = useState({
-    schoolName: "",
-    department: "",
-    startDate: new Date(),
-    endDate: new Date(),
     jobseekerId: authItem[0].user.id,
   });
 

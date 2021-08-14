@@ -4,9 +4,9 @@ export default class AdvertisementService {
   getAllPages(pageNo, pageSize) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallpages?pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
@@ -46,47 +46,47 @@ export default class AdvertisementService {
   getAdvertisementByEmployerName(name, pageNo, pageSize, token) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getByEmployerName?name=" +
-        name +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize,
-      {headers:{Authorization: `Bearer ${token}`}  }
+      name +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 
   getAdvertisementByJobTitle(jobTitle, pageNo, pageSize) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbyjobtitle?jobTitle=" +
-        jobTitle +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      jobTitle +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
   getAdvertisementByLocation(locationId, pageNo, pageSize) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbylocation?location=" +
-        locationId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      locationId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
   getAdvertisementByJobTitleAndLocation(jobTitle, locationId, pageNo, pageSize) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbyjobtitleandlocation?jobTitle=" +
-        jobTitle +
-        "&location=" +
-        locationId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      jobTitle +
+      "&location=" +
+      locationId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
@@ -99,15 +99,15 @@ export default class AdvertisementService {
   ) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getbyall?jobTitle=" +
-        jobTitle +
-        "&location=" +
-        locationId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize +
-        "&workTime=" +
-        workTimeId
+      jobTitle +
+      "&location=" +
+      locationId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize +
+      "&workTime=" +
+      workTimeId
     );
   }
 
@@ -119,13 +119,13 @@ export default class AdvertisementService {
   ) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbylocationandworktime?location=" +
-        locationId +
-        "&workTime=" +
-        workTimeId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      locationId +
+      "&workTime=" +
+      workTimeId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
@@ -137,29 +137,36 @@ export default class AdvertisementService {
   ) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbyjobtitleworktime?jobTitle=" +
-        jobTitle +
-        "&workTime=" +
-        workTimeId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      jobTitle +
+      "&workTime=" +
+      workTimeId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
   getAdvertisementByWorkTime(workTimeId, pageNo, pageSize) {
     return axios.get(
       "http://localhost:8080/api/advertisements/getallbyworktime?worktime=" +
-        workTimeId +
-        "&pageNo=" +
-        pageNo +
-        "&pageSize=" +
-        pageSize
+      workTimeId +
+      "&pageNo=" +
+      pageNo +
+      "&pageSize=" +
+      pageSize
     );
   }
 
   getAdvertisementById(adId, token) {
     return axios.get(
       "http://localhost:8080/api/advertisements/get?id=" + adId,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  }
+
+  closeAdvertisement(advertisementId, token) {
+    return axios.post(
+      "http://localhost:8080/api/advertisements/close", advertisementId,
       { headers: { Authorization: `Bearer ${token}` } }
     );
   }

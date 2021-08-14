@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ApplicationService from "../../services/applicationService";
-import {Card,Button} from "semantic-ui-react"
+import { Card, Button } from "semantic-ui-react"
 import { useSelector } from "react-redux";
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 
 
 export default function JobseekerApplicationBox(props) {
   const id = props.id;
-  
+
   const { authItem } = useSelector((state) => state.auth);
 
   const [applications, setApplications] = useState([]);
@@ -15,13 +15,13 @@ export default function JobseekerApplicationBox(props) {
   let applicationService = new ApplicationService();
 
   async function getApplications() {
-    try{
-      const response = await applicationService.getApplicationByJobseekerId(id,authItem[0].user.token);
-    setApplications(response.data);
-    }catch(error){
-      return toast.error(error.response.data.message);
+    try {
+      const response = await applicationService.getApplicationByJobseekerId(id, authItem[0].user.token);
+      setApplications(response.data.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
-    
+
   }
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function JobseekerApplicationBox(props) {
         >
           <h5 style={{ margin: "0" }}>Applications</h5>
         </div>
-        <div style={{ padding: "20px", display: "flex",flexDirection:"column" }}>
+        <div style={{ padding: "20px", display: "flex", flexDirection: "column" }}>
 
           {applications ? (
             applications.map((application) => (

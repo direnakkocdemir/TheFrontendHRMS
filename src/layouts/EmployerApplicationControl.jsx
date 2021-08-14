@@ -36,6 +36,28 @@ export default function EmployerApplicationControl(props) {
   let advertisementService = new AdvertisementService();
   let resumeService = new ResumeService();
 
+  const getAdvertisement = async (id) => {
+    try {
+      const response = await advertisementService.getAdvertisementById(
+        id,
+        authItem[0].user.token
+      );
+      console.log(response.data.data);
+      setAd(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
+
+  const getApplicants = async () => {
+    const response = await applicationService.getApplicationByAdvertisementId(
+      id,
+      authItem[0].user.token
+    );
+    console.log(response.data.data)
+    setApplicants(response.data.data);
+  };
+
   const getResume = async (jobseekerId) => {
     const response = await resumeService.getResumeByJobseekerId(
       jobseekerId,
@@ -45,40 +67,21 @@ export default function EmployerApplicationControl(props) {
     setResume(response.data.data);
   };
 
-  const getAdvertisement = async (id) => {
-    try {
-      const response = await advertisementService.getAdvertisementById(
-        id,
-        authItem[0].user.token
-      );
-      setAd(response.data.data);
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
-  };
-
-  const getApplicants = async (id) => {
-    const response = await applicationService.getApplicationByAdvertisementId(
-      id,
-      authItem[0].user.token
-    );
-    setApplicants(response.data);
-  };
-
   const getJobseekersApplications = async (jobseekerId) => {
     try {
       const response = await applicationService.getApplicationByJobseekerId(
         jobseekerId,
         authItem[0].user.token
       );
-      setJobseekerApplications(response.data);
+      setJobseekerApplications(response.data.data);
     } catch (err) {
       toast.error(err.response.data.message);
     }
   };
+  
   useEffect(() => {
     getAdvertisement(id);
-    getApplicants(id);
+    getApplicants();
   }, [id]);
 
   async function openModal(jobseekerId) {
@@ -87,7 +90,7 @@ export default function EmployerApplicationControl(props) {
     setOpen(true);
   }
   return (
-    <div style={{ height: "80h" }}>
+    <div style={{ height: "80vh", marginTop:"40px" }}>
       <Card fluid>
         <Card.Content>
           <Card.Header>{ad.jobTitle}</Card.Header>
@@ -100,6 +103,7 @@ export default function EmployerApplicationControl(props) {
             {applicants ? (
               applicants.map((applicant) => (
                 <Modal
+                key={applicant.id}
                   open={open}
                   onClose={() => setOpen(false)}
                   onOpen={() => openModal(applicant.jobseeker.id)}
@@ -107,7 +111,6 @@ export default function EmployerApplicationControl(props) {
                     <List.Item>
                       <List.Content>
                         <List.Header
-                          as={Link}
                           onClick={() => openModal(applicant.jobseeker.id)}
                         >
                           {applicant.jobseeker.firstName +
@@ -236,7 +239,7 @@ export default function EmployerApplicationControl(props) {
                 </Modal>
               ))
             ) : (
-              <Card.Description>There is no applicant</Card.Description>
+              <List.Header>There is no applicant</List.Header>
             )}
           </List>
         </Card.Content>

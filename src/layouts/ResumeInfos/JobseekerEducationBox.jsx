@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import EducationService from "../../services/educationService"
+import { useSelector } from "react-redux";
+
 
 export default function JobseekerEducationBox(props) {
   const resume = props.resume;
+
+  const { token } = useSelector(state => state.auth)
 
   let [education, setEducation] = useState([]);
 
@@ -11,6 +17,17 @@ export default function JobseekerEducationBox(props) {
 
   async function getEducations() {
     setEducation(resume.educations);
+  }
+
+  const educationService = new EducationService();
+  async function deleteEducation(educationId) {
+    try {
+      const response = await educationService.deleteEducation({ id: educationId }, token);
+      toast.success(response.data.message);
+      history.push("/");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
   }
 
   useEffect(() => {
@@ -45,19 +62,21 @@ export default function JobseekerEducationBox(props) {
           }}
         >
           <h5 style={{ margin: "0" }}>Education</h5>
-          <Button icon="pencil" onClick={goSettings} />
+          <Button icon="add" onClick={goSettings} />
         </div>
         <div style={{ padding: "20px", display: "flex",flexDirection:"column" }}>
           {education ? (
             education.map((edu) => (
               <Card key={edu.id} fluid>
                 <Card.Content>
+                  <Button floated="right" size="mini" onClick={()=>deleteEducation(edu.id)} icon="x"/>
                   <Card.Header>{edu.schoolName}</Card.Header>
                   <Card.Meta>{edu.department}</Card.Meta>
                   <Card.Meta>
                     {edu.startDate} - {edu.endDate}
                   </Card.Meta>
                 </Card.Content>
+                
               </Card>
             ))
           ) : (

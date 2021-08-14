@@ -9,11 +9,6 @@ export default function JobseekerExperienceSetting() {
   const { authItem } = useSelector((state) => state.auth);
 
   const [experience, setExperience] = useState({
-    company: "",
-    description: "",
-    jobTitle: "",
-    startDate: new Date(),
-    endDate: new Date(),
     jobseekerId: authItem[0].user.id,
   });
 
