@@ -8,30 +8,38 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function AdvertiseForm() {
+
+  //Redux state to use in the layout
   const { authItem } = useSelector((state) => state.auth);
 
+  //States for form
   const [workTimes, setWorkTimes] = useState([]);
   const [cities, setCities] = useState([]);
 
+  //States for sending the form inputs
   const [jobTitle, setJobTitle] = useState("");
   const [cityIndex, setCityIndex] = useState(0);
   const [workTimeIndex, setWorkTimeIndex] = useState(0);
   const [openPosition, setOpenPosition] = useState(0);
   const [description, setDescription] = useState("");
 
+  //State for sending the advertisement information
   const [ad, setAd] = useState({
-    employerId: authItem[0].user.id ,
+    employerId: authItem[0].user.id,
     description: description.value,
     jobTitle: jobTitle.value,
-    locationId:  cityIndex.value ,
+    locationId: cityIndex.value,
     openPosition: openPosition.value,
-    workTimeId:  workTimeIndex.value ,
+    workTimeId: workTimeIndex.value,
   });
+
+  //Service to use the Http requests
   const workTimeService = new WorkTimeService();
   const cityService = new CityService();
   const advertisementService = new AdvertisementService();
-  const history = useHistory();
+  const history = useHistory(); // For using the router to change the component
 
+  //Getting work times from backend
   async function getAllWorkTimes() {
     try {
       const response = await workTimeService.getWorkTimesForDropdown();
@@ -40,7 +48,7 @@ export default function AdvertiseForm() {
       toast.error(err.response.data.message);
     }
   }
-
+  //Getting cities from backend
   async function getAllCitiesForDropdown() {
     try {
       const response = await cityService.getAllCitiesForDropdown();
@@ -50,28 +58,32 @@ export default function AdvertiseForm() {
     }
   }
 
+  //hook for taking action to getting the information 
   useEffect(() => {
     getAllWorkTimes();
     getAllCitiesForDropdown();
   }, []);
 
+  //Function for posting the advertisement information to backend
   async function publishAd() {
-    try{
+    try {
+      console.log(ad);
       const response = await advertisementService.postAdvertisement(
-      ad,
-      authItem[0].user.token
-    );
-    toast.success(response.data.message)
-    history.push("/");
-    }catch(err){
+        ad,
+        authItem[0].user.token
+      );
+      toast.success(response.data.message)
+      history.push("/");
+    } catch (err) {
       toast.error(err.response.data.message);
     }
-    
+
   }
 
+  // Functions for changing the states 
   let changeHandler = (e) => setAd({ ...ad, [e.target.name]: e.target.value });
   let changeLocation = (e, { value }) =>
-    setAd({ ...ad, locationId:value });
+    setAd({ ...ad, locationId: value });
   let changeWorkTime = (e, { value }) =>
     setAd({ ...ad, workTimeId: value });
 
@@ -130,7 +142,6 @@ export default function AdvertiseForm() {
             onChange={changeHandler}
           />
           <Form.Checkbox label="I agree to the Terms and Conditions" />
-
           <Form.Button onClick={publishAd}>Submit</Form.Button>
         </Form>
       </Segment>

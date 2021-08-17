@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Card,
   Icon,
-  Menu,
   Table,
   Button,
   Pagination,
@@ -11,23 +10,25 @@ import {
 import AdvertisementService from "../../services/advertisementService";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import ApplicationService from "../../services/applicationService";
 import { toast } from "react-toastify";
 
 export default function EmployerAdsBox() {
+  //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
   const { token } = useSelector((state) => state.auth);
 
+  //States to keep the advertisements 
   const [ads, setAds] = useState([]);
-  // const [closeId, setCloseId] = useState({id:0})
+  //States to keep the page informations
   let [activePage, setActivePage] = useState(1);
   let [pageSize, setPageSize] = useState(2);
   let [totalPageSize, setTotalPageSize] = useState(0);
-  
 
+  //Service to use the Http requests 
   let advertisementService = new AdvertisementService();
-  const history = useHistory();
+  const history = useHistory();// For using the router to change the component
 
+  //Function to get all advertisements by specific page and amount
   async function getEmployerAds() {
     try {
       const ads = await advertisementService.getAdvertisementByEmployerName(
@@ -43,32 +44,34 @@ export default function EmployerAdsBox() {
       toast.error(err.response)
     }
   }
-
-  async function closeAdvertisement(closeId){
-    try{
-      const response = await advertisementService.closeAdvertisement({id:closeId},token);
+  //Function to close the advertisement by advertisement id
+  async function closeAdvertisement(closeId) {
+    try {
+      const response = await advertisementService.closeAdvertisement({ id: closeId }, token);
       toast.success(response.data.message);
-    }catch(err){
+    } catch (err) {
       toast.error(err.response.data.message);
     }
-    
-
   }
+  //hook for taking action to getting the about
+  //if activePage, pageSize or authItem changes, hook works again
   useEffect(() => {
     getEmployerAds();
   }, [activePage, pageSize, authItem]);
 
+  //Fuction to go to setting compnent
   function goSettings() {
     history.push("/jsabout");
   }
+  // Function to handle page changes 
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
   };
-
   const handlePaginationSizeChange = (value) => {
     setPageSize(value);
   };
 
+  //Defined page options 
   const paginationOptions = [
     { key: 2, text: "2 İlan", value: 2 },
     { key: 10, text: "10 İlan", value: 10 },
@@ -77,9 +80,12 @@ export default function EmployerAdsBox() {
     { key: 100, text: "100 İlan", value: 100 },
   ];
 
+  //Function to check the applicants
+  //Sending advertisement id to component
   const checkApplicants = (adId) => {
     history.push("/employer/applications/" + adId);
   };
+  
   return (
     <div
       style={{
@@ -142,7 +148,7 @@ export default function EmployerAdsBox() {
                           >
                             Check
                           </Button>
-                          <Button color="red" onClick={()=>closeAdvertisement(ad.id)}>Close</Button>
+                          <Button color="red" onClick={() => closeAdvertisement(ad.id)}>Close</Button>
                         </div>
                       </Card.Content>
                     </Card>

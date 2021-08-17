@@ -24,19 +24,19 @@ export default function Home() {
   return (
     <div>
       <ToastContainer
-      position="bottom-right"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-    />
-      {/* Same as */}
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <ToastContainer />
       <Container>
+        {/* Routes for each component */}
         <Route exact path="/" component={SearchBox} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Signup} />

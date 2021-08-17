@@ -4,6 +4,8 @@ import { FaUser, FaUsers } from "react-icons/fa";
 import { Button } from "semantic-ui-react";
 
 export default function SignupMain() {
+  // This component for choosing the registration type
+
   return (
     <div>
       <div

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import UserService from "../../services/userService";
 import { Button, Form, Segment, Input, Header } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SignupEmployerBox() {
+
+  // State the keep registration informations for this component
   const [registerEmployer, setRegisterEmployer] = useState({
     companyName: "",
     website: "",
@@ -15,14 +18,22 @@ export default function SignupEmployerBox() {
     confirmPassword: "",
   });
 
-  const history = useHistory();
+  //Service to use the Http requests 
   let userService = new UserService();
+  const history = useHistory();// For using the router to change the component
 
+  // Function to register the system for employer
   async function signup() {
-    const result = await userService.registerEmployer(registerEmployer);
-    console.log(result.data);
-    history.push("/login");
+    try {
+      const result = await userService.registerEmployer(registerEmployer);
+      toast.success(result.data.message);
+      history.push("/login");
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+
+  // Function to handle the changes in registerEmployer state
   let changeHandler = (e) =>
     setRegisterEmployer({
       ...registerEmployer,
@@ -33,9 +44,9 @@ export default function SignupEmployerBox() {
     <div style={{
       height: "80vh",
       display: "flex",
-      flexDirection:"column",
+      flexDirection: "column",
       justifyContent: "center",
-      }}>
+    }}>
       <Header as="h1" color="teal" textAlign="center">
         Employer Register
       </Header>

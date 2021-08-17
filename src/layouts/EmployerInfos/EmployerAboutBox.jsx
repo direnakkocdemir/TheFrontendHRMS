@@ -6,16 +6,21 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function EmployerAboutBox(props) {
+  //Prop which comes from parent
   const id = props.id;
 
+  //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
   const { token } = useSelector((state) => state.auth);
 
+  //State to keep the about
   const [about, setAbout] = useState([]);
 
+  //Service to use the Http requests
   let aboutService = new AboutService();
-  const history = useHistory();
+  const history = useHistory(); // For using the router to change the component
 
+  //Function for getting the employer's about from backend
   async function getEmployerAbout() {
     try {
       const result = await aboutService.getEmployerAboutByEmployerId(
@@ -28,6 +33,7 @@ export default function EmployerAboutBox(props) {
     }
   }
 
+  //Function to delete the about
   async function deleteAbout() {
     try {
       const response = await aboutService.deleteEmployerAbout({ id: about[0].id }, token);
@@ -38,10 +44,13 @@ export default function EmployerAboutBox(props) {
     }
   }
 
+  //hook for taking action to getting the about
+  // if props or authItem change, hook works again 
   useEffect(async () => {
     getEmployerAbout();
-  }, [props,authItem]);
+  }, [props, authItem]);
 
+  //Function to change the component
   function goSettings() {
     history.push("/emabout");
   }

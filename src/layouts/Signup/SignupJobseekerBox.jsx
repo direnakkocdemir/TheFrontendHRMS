@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import UserService from "../../services/userService";
 import { Button, Form, Segment, Input, Header } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SignupJobseekerBox() {
+
+  // State the keep registration informations for this component
   const [registerJobseeker, setRegisterJobseeker] = useState({
     email: "",
     firstName: "",
@@ -14,14 +17,23 @@ export default function SignupJobseekerBox() {
     confirmPassword: "",
   });
 
-  const history = useHistory();
+  //Service to use the Http requests 
   let userService = new UserService();
+  const history = useHistory(); // For using the router to change the component
 
+  // Function to register the system for jobseeker
   async function signup() {
-    const result = await userService.registerJobseeker(registerJobseeker);
-    console.log(result.data);
-    history.push("/login");
+    try {
+      const result = await userService.registerJobseeker(registerJobseeker);
+      toast.success(result.data.message);
+      history.push("/login");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+
   }
+
+  // Function to handle the changes in registerJobseeker state
   let changeHandler = (e) =>
     setRegisterJobseeker({
       ...registerJobseeker,
@@ -35,11 +47,11 @@ export default function SignupJobseekerBox() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        margin:"40px 0 40px 0"
+        margin: "40px 0 40px 0"
       }}
     >
       <Header as="h1" color="teal" textAlign="center">
-         Register
+        Register
       </Header>
       <Segment>
         <Form>

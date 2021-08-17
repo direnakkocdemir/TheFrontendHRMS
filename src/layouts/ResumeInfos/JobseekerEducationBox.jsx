@@ -7,19 +7,24 @@ import { useSelector } from "react-redux";
 
 
 export default function JobseekerEducationBox(props) {
+  //Prop to use in this component from parent
   const resume = props.resume;
-
+  //Redux states to use in the component
   const { token } = useSelector(state => state.auth)
-
+  // State to keep the educations for this component
   let [education, setEducation] = useState([]);
 
-  const history = useHistory();
+  const history = useHistory();// For using the router to change the component
 
+  // Function to divide the the resume and set the education state 
   async function getEducations() {
     setEducation(resume.educations);
   }
 
+  //Service to use the Http requests 
   const educationService = new EducationService();
+
+  //Function to delete the jobseeker's chosen education by id from the system
   async function deleteEducation(educationId) {
     try {
       const response = await educationService.deleteEducation({ id: educationId }, token);
@@ -30,10 +35,13 @@ export default function JobseekerEducationBox(props) {
     }
   }
 
+  //hook for taking action to dividing resume for education state
+  // if props(resume) change, hook works again 
   useEffect(() => {
     getEducations();
   }, [props]);
 
+  //Fuction to go to setting component
   function goSettings() {
     history.push("/jseducation");
   }
@@ -64,19 +72,19 @@ export default function JobseekerEducationBox(props) {
           <h5 style={{ margin: "0" }}>Education</h5>
           <Button icon="add" onClick={goSettings} />
         </div>
-        <div style={{ padding: "20px", display: "flex",flexDirection:"column" }}>
+        <div style={{ padding: "20px", display: "flex", flexDirection: "column" }}>
           {education ? (
             education.map((edu) => (
               <Card key={edu.id} fluid>
                 <Card.Content>
-                  <Button floated="right" size="mini" onClick={()=>deleteEducation(edu.id)} icon="x"/>
+                  <Button floated="right" size="mini" onClick={() => deleteEducation(edu.id)} icon="x" />
                   <Card.Header>{edu.schoolName}</Card.Header>
                   <Card.Meta>{edu.department}</Card.Meta>
                   <Card.Meta>
                     {edu.startDate} - {edu.endDate}
                   </Card.Meta>
                 </Card.Content>
-                
+
               </Card>
             ))
           ) : (

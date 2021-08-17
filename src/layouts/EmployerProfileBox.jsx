@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {Button,Icon} from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import EmployerService from "../services/employerService";
 import { useHistory } from "react-router-dom";
 
 
-export default function EmployerProfileBox(props) {
+export default function EmployerProfileBox() {
+
+  //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
   const { token } = useSelector((state) => state.auth);
 
+  // State to keep the employer's information
   const [employer, setEmployer] = useState({
     id: 0,
     companyName: "",
@@ -19,25 +22,30 @@ export default function EmployerProfileBox(props) {
     industry: "",
   });
 
+  //Service to use the Http requests 
   let employerService = new EmployerService();
-  const history = useHistory();
+  const history = useHistory(); // For using the router to change the component
 
+  // component path name and state
   const location = {
     pathname: "/upload",
     state: { userId: authItem[0].user.id, token: token },
   };
 
+  // Function to get employer's information from the database 
   async function getEmployerInfo() {
     try {
       const response = await employerService.getEmployerInfoById(
         authItem[0].user.id,
-        authItem[0].user.token
+        token
       );
       setEmployer(response.data);
     } catch (err) {
       toast.error(err.response.data.message);
     }
   }
+  // hook for taking action to get employer's information
+  // if authItem changes, hook works again
   useEffect(async () => {
     getEmployerInfo();
   }, [authItem]);

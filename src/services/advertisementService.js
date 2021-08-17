@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// HTTP Requests
 export default class AdvertisementService {
   getAllPages(pageNo, pageSize) {
     return axios.get(

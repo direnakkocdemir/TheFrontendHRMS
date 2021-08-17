@@ -4,6 +4,8 @@ import { Button, Icon, Popup } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 
 export default function Footer() {
+  
+  //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
 
   return (
@@ -101,20 +103,20 @@ export default function Footer() {
             )}
           </li>
           <li>
-              {!authItem[0].loggedIn ?<Button color="google plus" content="Signup" basic as={Link}
-                to={"/register"}/> : <Popup
-                content="You are logged in"
-                trigger={
-                  <Button
-                    color="google plus"
-                    content="Signup"
-                    basic
-                    as={Link}
-                    to={"/"}
-                  />
-                }
-              />}
-            
+            {!authItem[0].loggedIn ? <Button color="google plus" content="Signup" basic as={Link}
+              to={"/register"} /> : <Popup
+              content="You are logged in"
+              trigger={
+                <Button
+                  color="google plus"
+                  content="Signup"
+                  basic
+                  as={Link}
+                  to={"/"}
+                />
+              }
+            />}
+
           </li>
           <li>
             <Button color="google plus" content="Contact Us" basic />

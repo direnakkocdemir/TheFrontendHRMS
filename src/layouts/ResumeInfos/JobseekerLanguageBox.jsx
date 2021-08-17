@@ -7,18 +7,21 @@ import { toast } from "react-toastify";
 
 export default function JobseekerLanguageBox(props) {
   const resume = props.resume;
-
+  //Redux states to use in the component
   const { token } = useSelector(state => state.auth)
-
+  // State to keep the language for this component
   let [language, setLanguage] = useState([]);
 
-  const history = useHistory();
+  const history = useHistory();// For using the router to change the component
 
+  // Function to divide the the resume and set the language state 
   async function getLanguages() {
     setLanguage(resume.languages);
   }
-
+  //Service to use the Http requests 
   const languageService = new LanguageService();
+
+  //Function to delete the jobseeker's chosen language by id from the system
   async function deleteLanguage(languageId) {
     try {
       const response = await languageService.deleteLanguage({ id: languageId }, token);
@@ -28,11 +31,12 @@ export default function JobseekerLanguageBox(props) {
       toast.error(err.response.data.message);
     }
   }
-
+  //hook for taking action to dividing resume for language state
+  // if props(resume) change, hook works again 
   useEffect(() => {
     getLanguages();
   }, [props]);
-
+  //Fuction to go to setting component
   function goSettings() {
     history.push("/jslanguage");
   }
@@ -69,19 +73,10 @@ export default function JobseekerLanguageBox(props) {
             {language
               ? language.map((lang) => (
                 <List.Item key={lang.id}>
-                  <Button floated="right" size="mini" icon="x" onClick={()=>deleteLanguage(lang.id)}/>
+                  <Button floated="right" size="mini" icon="x" onClick={() => deleteLanguage(lang.id)} />
                   <List.Header>{lang.language}</List.Header>Level: {lang.level}
                 </List.Item>)) : null}
           </List>
-          {/* <ul>
-            {language
-              ? language.map((lang) => (
-                  <li key={lang.id}>
-                    {lang.language} - Level: {lang.level}
-                  </li>
-                ))
-              : null}
-          </ul> */}
         </div>
       </div>
     </div>

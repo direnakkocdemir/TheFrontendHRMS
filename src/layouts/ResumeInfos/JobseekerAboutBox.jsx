@@ -5,22 +5,25 @@ import AboutService from '../../services/aboutService'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-
-
 export default function JobseekerAboutBox(props) {
+  //Prop to use in this component from parent
   const resume = props.resume;
-
+  //Redux states to use in the component
   const { token } = useSelector(state => state.auth)
-
+  //State to keep the about
   let [about, setAbout] = useState([]);
 
-  const history = useHistory();
+  const history = useHistory();// For using the router to change the component
 
+  // Function to divide the result and set the about
   async function getAbout() {
     setAbout(resume.abouts);
   }
 
+  //Service to use the Http requests 
   const aboutService = new AboutService();
+
+  //Function to delete the jobseeker's about from the system
   async function deleteAbout() {
     try {
       const response = await aboutService.deleteAbout({ id: about[0].id }, token);
@@ -30,11 +33,13 @@ export default function JobseekerAboutBox(props) {
       toast.error(err.response.data.message);
     }
   }
-
+  //hook for taking action to dividing resume for about state
+  // if props(resume) change, hook works again 
   useEffect(() => {
     getAbout();
   }, [props]);
 
+  //Fuction to go to setting component
   function goSettings() {
     history.push("/jsabout");
   }

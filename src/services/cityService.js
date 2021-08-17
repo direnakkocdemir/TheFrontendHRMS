@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-export default class CityService{
+// HTTP Requests
+export default class CityService {
 
-    getAllCitiesForDropdown(){
+    getAllCitiesForDropdown() {
         return axios.get("http://localhost:8080/api/location/getallfordropdown");
     }
 

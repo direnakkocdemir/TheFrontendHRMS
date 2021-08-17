@@ -7,11 +7,16 @@ import AdvertisementService from "../services/advertisementService";
 import ApplicationService from "../services/applicationService";
 import ResumeService from "../services/resumeService";
 
-export default function EmployerApplicationControl(props) {
+export default function EmployerApplicationControl() {
+
+  //Component's parameter to show the applications
   let { id } = useParams();
 
+  //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
+  // State to keep the applicant's resume
   const [resume, setResume] = useState({
     id: 0,
     abouts: [{ id: 0, about: "" }],
@@ -21,7 +26,9 @@ export default function EmployerApplicationControl(props) {
     languages: [],
     images: [],
   });
+  // State to keep the jobseeker's application
   const [jobseekerApplications, setJobseekerApplications] = useState([]);
+  // State to keep the advertisement information for this component
   const [ad, setAd] = useState({
     description: "",
     jobTitle: "",
@@ -29,68 +36,82 @@ export default function EmployerApplicationControl(props) {
     openPosition: 0,
     workTime: { id: 0, name: "" },
   });
+  // State to keep the applicants for this component
   const [applicants, setApplicants] = useState([]);
+  // State to open or close the modal
   const [open, setOpen] = useState(false);
-
+  //Service to use the Http requests 
   let applicationService = new ApplicationService();
   let advertisementService = new AdvertisementService();
   let resumeService = new ResumeService();
 
+  // Function to get adcertisement by id
   const getAdvertisement = async (id) => {
     try {
       const response = await advertisementService.getAdvertisementById(
         id,
-        authItem[0].user.token
+        token
       );
-      console.log(response.data.data);
       setAd(response.data.data);
     } catch (err) {
       toast.error(err.response.data.message);
     }
   };
 
+  // Function to get the applicants 
   const getApplicants = async () => {
-    const response = await applicationService.getApplicationByAdvertisementId(
-      id,
-      authItem[0].user.token
-    );
-    console.log(response.data.data)
-    setApplicants(response.data.data);
+    try {
+      const response = await applicationService.getApplicationByAdvertisementId(
+        id,
+        token
+      );
+      console.log(response.data.data)
+      setApplicants(response.data.data);
+    } catch (err) {
+
+    }
   };
 
+  // Function to get the resume by jobseeker id from the data base
   const getResume = async (jobseekerId) => {
-    const response = await resumeService.getResumeByJobseekerId(
-      jobseekerId,
-      authItem[0].user.token
-    );
-    console.log(response.data.data);
-    setResume(response.data.data);
-  };
+    try {
+      const response = await resumeService.getResumeByJobseekerId(
+        jobseekerId,
+        token
+      );
+      console.log(response.data.data);
+      setResume(response.data.data);
+    } catch (err) {
 
+    }
+  };
+  // Function to get the jobseeker's application by jobseeker id 
   const getJobseekersApplications = async (jobseekerId) => {
     try {
       const response = await applicationService.getApplicationByJobseekerId(
         jobseekerId,
-        authItem[0].user.token
+        token
       );
       setJobseekerApplications(response.data.data);
     } catch (err) {
       toast.error(err.response.data.message);
     }
   };
-  
+  // hook for taking action to get advertisement and applicants
+  // if id change, hook works again 
   useEffect(() => {
     getAdvertisement(id);
     getApplicants();
   }, [id]);
-
+  // Function to open and close the modal and
+  // Getting the applicants information
   async function openModal(jobseekerId) {
     getResume(jobseekerId);
     getJobseekersApplications(jobseekerId);
     setOpen(true);
   }
   return (
-    <div style={{ height: "80vh", marginTop:"40px" }}>
+    <div style={{ minHeight: "80vh", marginTop: "40px" }}>
       <Card fluid>
         <Card.Content>
           <Card.Header>{ad.jobTitle}</Card.Header>
@@ -103,7 +124,7 @@ export default function EmployerApplicationControl(props) {
             {applicants ? (
               applicants.map((applicant) => (
                 <Modal
-                key={applicant.id}
+                  key={applicant.id}
                   open={open}
                   onClose={() => setOpen(false)}
                   onOpen={() => openModal(applicant.jobseeker.id)}
@@ -177,18 +198,18 @@ export default function EmployerApplicationControl(props) {
                           description={
                             resume.educations
                               ? resume.educations.map((edu) => (
-                                  <Card key={edu.id} fluid>
-                                    <Card.Content>
-                                      <Card.Header>
-                                        {edu.schoolName}
-                                      </Card.Header>
-                                      <Card.Meta>{edu.department}</Card.Meta>
-                                      <Card.Meta>
-                                        {edu.startDate} - {edu.endDate}
-                                      </Card.Meta>
-                                    </Card.Content>
-                                  </Card>
-                                ))
+                                <Card key={edu.id} fluid>
+                                  <Card.Content>
+                                    <Card.Header>
+                                      {edu.schoolName}
+                                    </Card.Header>
+                                    <Card.Meta>{edu.department}</Card.Meta>
+                                    <Card.Meta>
+                                      {edu.startDate} - {edu.endDate}
+                                    </Card.Meta>
+                                  </Card.Content>
+                                </Card>
+                              ))
                               : "yok edu"
                           }
                         />
@@ -200,8 +221,8 @@ export default function EmployerApplicationControl(props) {
                             <ul>
                               {resume.skills
                                 ? resume.skills.map((skill) => (
-                                    <li key={skill.id}>{skill.skillTitle}</li>
-                                  ))
+                                  <li key={skill.id}>{skill.skillTitle}</li>
+                                ))
                                 : "yok"}
                             </ul>
                           }
@@ -213,17 +234,17 @@ export default function EmployerApplicationControl(props) {
                           description={
                             jobseekerApplications
                               ? jobseekerApplications.map((application) => (
-                                  <Card key={application.id} fluid>
-                                    <Card.Content>
-                                      <Card.Header>
-                                        {application.advertisement.jobTitle}
-                                      </Card.Header>
-                                      <Card.Meta>
-                                        {application.advertisement.description}
-                                      </Card.Meta>
-                                    </Card.Content>
-                                  </Card>
-                                ))
+                                <Card key={application.id} fluid>
+                                  <Card.Content>
+                                    <Card.Header>
+                                      {application.advertisement.jobTitle}
+                                    </Card.Header>
+                                    <Card.Meta>
+                                      {application.advertisement.description}
+                                    </Card.Meta>
+                                  </Card.Content>
+                                </Card>
+                              ))
                               : "yok application"
                           }
                         />

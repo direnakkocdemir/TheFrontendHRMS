@@ -5,7 +5,7 @@ export default function EmployerApplicants() {
     return (
         <div
       style={{
-        height: "80vh",
+        minHeight: "80vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

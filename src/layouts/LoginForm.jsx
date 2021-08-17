@@ -9,16 +9,18 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
 export default function LoginForm() {
-  const dispatch = useDispatch();
 
+  // Redux functions to use the redux actions
+  const dispatch = useDispatch();
   const handleLogin = (user) => {
     dispatch(userLogin(user));
   };
 
-  const history = useHistory();
-
+  //Service to use the Http requests 
   let userService = new UserService();
+  const history = useHistory(); // For using the router to change the component
 
+  // Yup extention for validation
   const userLoginSchema = Yup.object().shape({
     email: Yup.string()
       .required("You should complete this section")
@@ -26,6 +28,7 @@ export default function LoginForm() {
     password: Yup.string().required("You should complete this section"),
   });
 
+  // Form format with own helper functions
   const formik = useFormik({
     initialValues: {
       email: "",

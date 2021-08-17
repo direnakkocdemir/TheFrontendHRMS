@@ -7,8 +7,11 @@ import SignedIn from "./SignedIn";
 import SignedOut from "./SignedOut";
 
 export default function Navi() {
+
+   //Redux states to use in the component
   const { authItem } = useSelector((state) => state.auth);
 
+  // Component path name and states
   const location = {
     pathname: "/ads",
     state: { jobTitle: "", location: "" },

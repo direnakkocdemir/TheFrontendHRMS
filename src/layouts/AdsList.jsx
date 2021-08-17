@@ -14,95 +14,147 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function AdsList(props) {
-  const { authItem } = useSelector((state) => state.auth);
 
+  //Props to use in this component from parent
   const jobTitle = props.location.state.jobTitle;
   const location = props.location.state.location;
   const workTime = props.location.state.workTime;
 
+  //Redux states to use in the component
+  const { authItem } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
+
+  // State for keeping the advertisements for this component
   const [ads, setAds] = useState([]);
+  // States to keep the page informations
   let [activePage, setActivePage] = useState(1);
   let [pageSize, setPageSize] = useState(2);
   let [totalPageSize, setTotalPageSize] = useState(0);
 
+  //Service to use the Http requests 
   let advertisementService = new AdvertisementService();
   let applicationService = new ApplicationService();
-  const history = useHistory();
 
+  const history = useHistory(); // For using the router to change the component
+
+  // Function to get all advertisements without filter
   async function getAll() {
-    const response = await advertisementService.getAllPages(
-      activePage,
-      pageSize
-    );
-    setAds(response.data.data);
+    try {
+      const response = await advertisementService.getAllPages(
+        activePage,
+        pageSize
+      );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
+
   }
 
+  // Function to get filtered advertisements by job title
   async function getAllByJobTitle(jobTitle) {
-    const response = await advertisementService.getAdvertisementByJobTitle(
-      jobTitle,
-      activePage,
-      pageSize
-    );
-    setAds(response.data.data);
+    try {
+      const response = await advertisementService.getAdvertisementByJobTitle(
+        jobTitle,
+        activePage,
+        pageSize
+      );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by location
   async function getAllByLocation(location) {
-    const response = await advertisementService.getAdvertisementByLocation(
-      location,
-      activePage,
-      pageSize
-    );
-    setAds(response.data.data);
+    try {
+      const response = await advertisementService.getAdvertisementByLocation(
+        location,
+        activePage,
+        pageSize
+      );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by work time
   async function getAllByWorkTime(workTime) {
-    const response = await advertisementService.getAdvertisementByWorkTime(
-      workTime,
-      activePage,
-      pageSize
-    );
-    setAds(response.data.data);
+    try {
+      const response = await advertisementService.getAdvertisementByWorkTime(
+        workTime,
+        activePage,
+        pageSize
+      );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by job title and location
   async function getAllByJobTitleAndLocation(jobTitle, location) {
-    const response =
-      await advertisementService.getAdvertisementByJobTitleAndLocation(
-        jobTitle,
-        location,
-        activePage,
-        pageSize
-      );
-    setAds(response.data.data);
+    try {
+      const response =
+        await advertisementService.getAdvertisementByJobTitleAndLocation(
+          jobTitle,
+          location,
+          activePage,
+          pageSize
+        );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by job title and work time
   async function getAllByJobTitleAndWorkTime(jobTitle, workTime) {
-    const response =
-      await advertisementService.getAdvertisementByJobTitleAndWorkTime(
-        jobTitle,
-        workTime,
-        activePage,
-        pageSize
-      );
-    setAds(response.data.data);
+    try {
+      const response =
+        await advertisementService.getAdvertisementByJobTitleAndWorkTime(
+          jobTitle,
+          workTime,
+          activePage,
+          pageSize
+        );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by location and work time 
   async function getAllByLocationAndWorkTime(location, workTime) {
-    const response =
-      await advertisementService.getAdvertisementByLocationAndWorkTime(
-        location,
-        workTime,
-        activePage,
-        pageSize
-      );
-    setAds(response.data.data);
+    try {
+      const response =
+        await advertisementService.getAdvertisementByLocationAndWorkTime(
+          location,
+          workTime,
+          activePage,
+          pageSize
+        );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
   }
+  // Function to get filtered advertisements by all filters
   async function getAllByAll(jobTitle, location, workTime) {
-    const response =
-      await advertisementService.getAdvertisementByJobTitleAndLocationAndWorkTime(
-        jobTitle,
-        location,
-        workTime,
-        activePage,
-        pageSize
-      );
-    setAds(response.data.data);
+    try {
+      const response =
+        await advertisementService.getAdvertisementByJobTitleAndLocationAndWorkTime(
+          jobTitle,
+          location,
+          workTime,
+          activePage,
+          pageSize
+        );
+      setAds(response.data.data);
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
+
   }
 
+  //hook for taking action by filter
+  // if props,authItem, pageSize, activePage change, hook works again
   useEffect(() => {
     if (jobTitle && location && workTime) {
       getAllByAll(jobTitle, location, workTime);
@@ -124,29 +176,30 @@ export default function AdsList(props) {
     setTotalPageSize(5);
   }, [authItem, pageSize, activePage, props]);
 
+  //Function for applying the job by advertisement id 
   async function apply(advertisementId) {
-    try{
-      console.log(authItem[0].user.token);
+    try {
       const response = await applicationService.apply(
-      advertisementId,
-      authItem[0].user.id,
-      authItem[0].user.token
-    );
-    toast.success(response.data.message);
-    }catch(err){
+        advertisementId,
+        authItem[0].user.id,
+        token
+      );
+      toast.success(response.data.message);
+    } catch (err) {
       toast.error(err.response.data.message);
     }
   }
 
+  // Function to handle page changes 
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
   };
-
   const handlePaginationSizeChange = (value) => {
     setPageSize(value);
     console.log(pageSize);
   };
 
+  // Defined advertisement amounts to show
   const paginationOptions = [
     { key: 2, text: "2 Ads", value: 2 },
     { key: 10, text: "10 Ads", value: 10 },
