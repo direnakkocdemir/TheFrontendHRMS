@@ -20,7 +20,7 @@ export default function LoginForm() {
   let userService = new UserService();
   const history = useHistory(); // For using the router to change the component
 
-  // Yup extention for validation
+  // Yup extension for validation
   const userLoginSchema = Yup.object().shape({
     email: Yup.string()
       .required("You should complete this section")
